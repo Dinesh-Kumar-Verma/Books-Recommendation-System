@@ -1,6 +1,6 @@
-from src.components.stage_01_data_validation import DataValidation
+from src.components.stage_02_data_transformation import DataTransformation
 
 if __name__ == "__main__":
-    validation = DataValidation()
-    validation.initiate_data_validation()
+    transformation = DataTransformation()
+    transformation.initiate_data_transformation()
 
