@@ -2,24 +2,23 @@ import logging
 import os
 from datetime import datetime
 
-
-# Creating logs directory to store log in files
+# Create logs directory
 LOG_DIR = "logs"
-LOG_DIR = os.path.join(os.getcwd(), LOG_DIR)
-
-#Creating LOG_DIR if it does not exists.
 os.makedirs(LOG_DIR, exist_ok=True)
 
+# Create timestamped log file name
+timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+log_file = f"app_{timestamp}.log"
+log_file_path = os.path.join(LOG_DIR, log_file)
 
-# Creating file name for log file based on current timestamp
-CURRENT_TIME_STAMP = f"{datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}"
-file_name = f"log_{CURRENT_TIME_STAMP}.log"
+# --- Configure logging globally ---
+logging.basicConfig(
+    level=logging.INFO,   # INFO and above
+    format='%(asctime)s | %(levelname)s | %(name)s | %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+        logging.FileHandler(log_file_path),
+        logging.StreamHandler()
+    ]
+)
 
-#Creating file path for projects.
-log_file_path = os.path.join(LOG_DIR, file_name)
-
-
-logging.basicConfig(filename=log_file_path,
-                    filemode='w',
-                    format='[%(asctime)s] %(name)s - %(levelname)s - %(message)s',
-                    level=logging.NOTSET)
