@@ -1,6 +1,7 @@
-from src.components.stage_02_data_transformation import DataTransformation
+from src.components.stage_03_model_trainer import ModelTrainer
+
 
 if __name__ == "__main__":
-    transformation = DataTransformation()
-    transformation.initiate_data_transformation()
+    model_trainer = ModelTrainer()
+    model_trainer.initiate_model_trainer()
 
