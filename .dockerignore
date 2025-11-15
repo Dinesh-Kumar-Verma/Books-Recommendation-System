@@ -1,0 +1,95 @@
+# --- Python Artifacts ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.pickle
+
+# --- Virtual Environments ---
+venv/
+env/
+*.egg-info/
+.eggs/
+
+# --- Build & Cache ---
+build/
+dist/
+*.log
+*.tmp
+*.cache/
+.cache/
+pip-wheel-metadata/
+.pytest_cache/
+.hatch/
+.uv/
+
+# --- Notebooks & Data ---
+*.ipynb_checkpoints
+notebooks/
+data/
+datasets/
+raw_data/
+tmp/
+temp/
+
+# --- DVC ---
+.dvc/
+.cache/
+*.dvc
+.dvcignore
+.dvc/tmp/
+.dvc/cache/
+
+# --- MLflow ---
+mlruns/
+mlflow_artifacts/
+mlartifacts/
+
+# --- Model Artifacts ---
+models/
+saved_models/
+artifacts/dataset/
+checkpoints/
+weights/
+
+# --- Sensitive Files ---
+.env
+.env.*
+secrets/
+secret/
+keys/
+*.pem
+*.key
+*.crt
+
+# --- OS Artifacts ---
+.DS_Store
+Thumbs.db
+
+# --- Git & IDE Tools ---
+.git/
+.gitignore
+.gitattributes
+.github/
+
+.vscode/
+.idea/
+*.swp
+
+# --- Project-Specific Folders ---
+logs/
+runtime/
+experiments/
+reports/
+
+# --- Dependency Management ---
+poetry.lock
+Pipfile
+Pipfile.lock
+poetry.toml
+
+# --- Docker Files ---
+Dockerfile.*
+docker-compose.yml
+docker-compose.yaml
