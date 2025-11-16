@@ -8,93 +8,181 @@
   <img src="https://img.shields.io/badge/Python-3.10%2B-yellow" />
 </p>
 
-# Books Recommendation System
+# 📚 End-to-End Book Recommendation System
 
-## Overview
-A production-ready, end-to-end book recommendation system built using collaborative filtering and Nearest Neighbors. The system processes raw book, user, and rating datasets, performs EDA, feature engineering, builds a recommendation engine, and serves real-time suggestions through a deployable application. The project demonstrates practical ML engineering skills, including model training, serialization, modular code design, and containerized deployment.
-
-## Key Features
-- Collaborative filtering using user–item rating matrix.
-- Pivot-table transformation and sparse matrix optimisation.
-- NearestNeighbors-based similarity search for generating top-N recommendations.
-- Image URL extraction for displaying book covers.
-- Serialized model artifacts for fast inference.
-- Streamlit UI for interactive recommendations.
-- Docker-ready structure for deployment.
-
-## Tech Stack
-- **Python**, **NumPy**, **Pandas**, **Scikit-learn**
-- **Streamlit** for UI  
-- **Joblib / Pickle** for model persistence  
-- **Docker** for packaging  
-- **Jupyter Notebook** for experimentation  
-
-## How the System Works
-1. **Data Cleaning & Normalisation**  
-   - Fix encodings, remove malformed rows, rename columns.
-
-2. **Filtering & Feature Engineering**  
-   - Keep users with ≥200 ratings.  
-   - Keep books with ≥50 ratings.  
-   - Merge datasets, generate final rating matrix.
-
-3. **Pivot Table + Sparse Matrix**  
-   - Construct user–book matrix.  
-   - Convert to CSR sparse format for efficient similarity search.
-
-4. **Model Training**  
-   - Fit `NearestNeighbors(algorithm="brute")` on sparse matrix.  
-   - Store book indices, titles, and poster URLs.
-
-5. **Inference Logic**  
-   - Given a book title → fetch its vector → return top-N similar books + images.
-
-6. **Streamlit UI**  
-   - Dropdown selection  
-   - Display recommended books with covers
-
-7. **Artifacts**  
-   Stored in `/artifacts`:
-   - `dataset/`
-   - `serialized_object/`
-   - `trained_model/`
+A production-ready, end-to-end book recommendation system built using collaborative filtering and K-Nearest Neighbors. The system processes raw book, user, and rating datasets, performs EDA, feature engineering, builds a recommendation engine, and serves real-time suggestions through a deployable Streamlit application.
 
 ---
 
-## Dataset
-The system uses publicly available book-ratings data (users, books, ratings).  
-Three primary CSV files are processed:
-- **Books.csv**
-- **Users.csv**
-- **Book-Ratings.csv**
+## ✨ Features
 
-## How It Works
-1. **Data Cleaning & Merging**  
-   - Load all three CSVs, clean malformed rows, unify column formats.  
-   - Merge books + ratings on ISBN and users + ratings on User-ID.
+- **Collaborative Filtering:** Recommends books based on the similarity of user ratings.
+- **K-Nearest Neighbors (KNN):** Finds the closest books to a given book in the latent feature space.
+- **Streamlit UI:** Interactive web interface for getting book recommendations.
+- **Dockerized:** Comes with a `Dockerfile` for easy containerization and deployment.
+- **End-to-End Pipeline:** A complete pipeline from data ingestion to model training and serving.
 
-2. **Filtering & Feature Engineering**  
-   - Retain users with ≥200 ratings to avoid sparse noise.  
-   - Retain books with ≥50 ratings for quality signals.  
-   - Construct a **user–book pivot matrix**.
+---
 
-3. **Sparse Matrix + Model Training**  
-   - Convert pivot table to CSR sparse matrix.  
-   - Train `NearestNeighbors(algorithm="brute")` for similarity search.
+## 🛠️ Tech Stack
 
-4. **Inference Logic**  
-   - Given a book, compute nearest similar books using K-NN.  
-   - Extract corresponding names + large cover image URLs.
+- **Python:** The core programming language.
+- **Pandas & NumPy:** For data manipulation and numerical operations.
+- **Scikit-learn:** For building the recommendation model.
+- **Streamlit:** For creating the web application.
+- **Docker:** For containerization.
+- **Gdown:** For downloading data from Google Drive.
 
-5. **UI Layer (Streamlit)**  
-   - Dropdown with all book titles  
-   - Display recommended books with cover images
+---
 
-## Running Locally
+## ⚙️ How It Works
+
+The recommendation system is built as a multi-stage pipeline:
+
+1.  **Data Ingestion:** 📥 Downloads the dataset from a Google Drive link.
+2.  **Data Validation & Cleaning:** 🧹
+    -   Reads the raw `Books.csv`, `Users.csv`, and `Ratings.csv` files.
+    -   Filters out users with less than 200 ratings and books with less than 50 ratings to reduce noise.
+    -   Merges the datasets to create a final ratings dataset.
+3.  **Data Transformation:** 🔄
+    -   Creates a user-item matrix (pivot table) where rows are book titles, columns are user IDs, and values are the ratings.
+    -   Fills missing ratings with 0.
+4.  **Model Training:** 🧠
+    -   Converts the user-item matrix into a sparse matrix (`csr_matrix`) for efficiency.
+    -   Trains a `NearestNeighbors` model with the `brute` force algorithm and `cosine` distance metric.
+5.  **Recommendation:** 💡
+    -   Given a book, the model finds the `n` nearest books in the vector space.
+    -   The Streamlit app displays the recommended books with their posters.
+
+---
+
+## 📂 Project Structure
+
+```
+.
+├── artifacts
+│   ├── dataset
+│   │   ├── clean_data
+│   │   ├── ingested_data
+│   │   ├── raw_data
+│   │   └── transformed_data
+│   ├── serialized_objects
+│   │   ├── book_names.pkl
+│   │   ├── book_pivot.pkl
+│   │   └── final_rating.pkl
+│   └── trained_model
+│       └── model.pkl
+├── config
+│   └── config.yaml
+├── src
+│   ├── components
+│   │   ├── stage_00_data_ingestion.py
+│   │   ├── stage_01_data_validation.py
+│   │   ├── stage_02_data_transformation.py
+│   │   └── stage_03_model_trainer.py
+│   ├── config
+│   │   └── configuration.py
+│   ├── entity
+│   │   └── config_entity.py
+│   ├── exception
+│   │   └── exception_handler.py
+│   ├── logger
+│   │   └── log.py
+│   ├── pipeline
+│   │   └── training_pipeline.py
+│   └── utils
+│       └── util.py
+├── .dockerignore
+├── .gitignore
+├── app.py
+├── Dockerfile
+├── main.py
+├── requirements.txt
+├── setup.py
+└── template.py
+```
+
+-   **`artifacts`**: Stores all the data and model files generated by the pipeline.
+-   **`config`**: Contains the configuration file for the project.
+-   **`src`**: The main source code for the project.
+    -   **`components`**: Contains the different stages of the ML pipeline.
+    -   **`pipeline`**: The main training pipeline that orchestrates the components.
+-   **`app.py`**: The Streamlit application for serving the recommendations.
+-   **`main.py`**: The main script to run the training pipeline.
+-   **`Dockerfile`**: For building the Docker image.
+
+---
+
+## 🚀 How to Run
+
+### 1. Clone the repository
+
 ```bash
-uv sync
-python main.py
-streamlit run app.py
-docker build -t book_recommendation:latest .
-docker run -p 8501:8501 book_recommendation:latest
+git clone https://github.com/your-username/Book-Recommendation-System.git
+cd Book-Recommendation-System
+```
 
+### 2. Install dependencies
+
+It is recommended to use a virtual environment.
+
+```bash
+uv venv
+uv sync
+```
+
+### 3. Run the training pipeline
+
+This will download the data, process it, and train the model.
+
+```bash
+python main.py
+```
+
+### 4. Run the Streamlit app
+
+```bash
+streamlit run app.py
+```
+
+Open your browser and go to `http://localhost:8501`.
+
+---
+
+## 📱 How to Use the App
+
+1.  Once the app is running, you will see a dropdown menu with a list of books.
+2.  Select a book from the dropdown.
+3.  Click the "Show Recommendation" button.
+4.  The app will display 5 book recommendations with their posters.
+5.  You can also retrain the model by clicking the "Train Recommender System" button.
+
+---
+
+## 🐳 Docker Deployment
+
+You can also run the application using Docker.
+
+### 1. Build the Docker image
+
+```bash
+docker build -t book-recommendation .
+```
+
+### 2. Run the Docker container
+
+```bash
+docker run -p 8501:8501 book-recommendation
+```
+
+The application will be available at `http://localhost:8501`.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
